@@ -19,17 +19,17 @@ build:
         dotnet publish -o publish
     - script:
       name: test-restore
-      cwd: src/MicroserviceCore.TeamService.Tests
+      cwd: test/MicroserviceCore.TeamService.Tests
       code: |
         dotnet restore
     - script:
       name: test-build
-      cwd: src/MicroserviceCore.TeamService.Tests
+      cwd: test/MicroserviceCore.TeamService.Tests
       code: |
         dotnet build
     - script:
       name: test-run
-      cwd: src/MicroserviceCore.TeamService.Tests
+      cwd: test/MicroserviceCore.TeamService.Tests
       code: |
         dotnet test
     - script:
