@@ -4,22 +4,39 @@ build:
   steps:
     - script:
       name: restore
+      cwd: src/MicroserviceCore.TeamService
       code: |
         dotnet restore
     - script:
       name: build
+      cwd: src/MicroserviceCore.TeamService
       code: |
         dotnet build
     - script:
       name: publish
+      cwd: src/MicroserviceCore.TeamService
       code: |
         dotnet publish -o publish
     - script:
+      name: test-restore
+      cwd: src/MicroserviceCore.TeamService.Tests
+      code: |
+        dotnet restore
+    - script:
+      name: test-build
+      cwd: src/MicroserviceCore.TeamService.Tests
+      code: |
+        dotnet build
+    - script:
+      name: test-run
+      cwd: src/MicroserviceCore.TeamService.Tests
+      code: |
+        dotnet test
+    - script:
       name: copy binary
+      cwd: src/MicroserviceCore.TeamService
       code: |
         cp -r . $WERCKER_OUTPUT_DIR/app
-        cd $WERCKER_OUTPUT_DIR/app
-
 deploy:
   steps:
     - internal/docker-push:
