@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MicroserviceCore.TeamService
 {
+    [Route("[controller]")]
     public class TeamsController : Controller
     {
         ITeamRepository _repository;
