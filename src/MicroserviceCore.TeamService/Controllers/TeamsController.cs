@@ -5,31 +5,31 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using MicroserviceCore.TeamService.Models;
-using MicroserviceCore.TeamService.Persistence;
 using System.Threading.Tasks;
+using MicroserviceCore.TeamService.Persistence;
 
 namespace MicroserviceCore.TeamService
 {
     [Route("[controller]")]
     public class TeamsController : Controller
     {
-        ITeamRepository _repository;
+        ITeamRepository repository;
 
-        public TeamsController(ITeamRepository repository)
+        public TeamsController(ITeamRepository repo)
         {
-            _repository = repository;
+            repository = repo;
         }
 
         [HttpGet]
         public virtual IActionResult GetAllTeams()
         {
-            return this.Ok(_repository.List());
+            return this.Ok(repository.List());
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTeam(Guid id)
+        public virtual IActionResult GetTeam(Guid id)
         {
-            Team team = _repository.Get(id);
+            Team team = repository.Get(id);
 
             if (team != null)
             {
@@ -42,22 +42,18 @@ namespace MicroserviceCore.TeamService
         }
 
         [HttpPost]
-        public virtual IActionResult CreateTeam([FromBody]Team newTeam)
+        public virtual IActionResult CreateTeam([FromBody] Team newTeam)
         {
-            _repository.Add(newTeam);
-
-            //TODO: add test that asserts result is a 201 pointing to URL of the created team.
-            //TODO: teams need IDs
-            //TODO: return created at route to point to team details
+            repository.Add(newTeam);
             return this.Created($"/teams/{newTeam.ID}", newTeam);
         }
 
-        [HttpPut("{id}")]
-        public virtual IActionResult UpdateTeam([FromBody]Team team, Guid id)
+        [HttpPut]
+        public virtual IActionResult UpdateTeam([FromBody] Team team, Guid id)
         {
             team.ID = id;
 
-            if (_repository.Update(team) == null)
+            if (repository.Update(team) == null)
             {
                 return this.NotFound();
             }
@@ -67,10 +63,10 @@ namespace MicroserviceCore.TeamService
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public virtual IActionResult DeleteTeam(Guid id)
         {
-            Team team = _repository.Delete(id);
+            Team team = repository.Delete(id);
 
             if (team == null)
             {
@@ -81,5 +77,6 @@ namespace MicroserviceCore.TeamService
                 return this.Ok(team.ID);
             }
         }
+
     }
 }
